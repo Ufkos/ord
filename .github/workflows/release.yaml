@@ -56,9 +56,9 @@ jobs:
       id: release-type
       run: |
         if [[ ${{ github.ref }} =~ ^refs/tags/[0-9]+[.][0-9]+[.][0-9]+$ ]]; then
-            echo ::set-output name=value::release
+            echo "value = release" >> $GITHUB_ENV
         else
-            echo ::set-output name=value::prerelease
+            echo "value = prerelease" >> $GITHUB_ENV
         fi
 
     - name: Package
@@ -77,6 +77,6 @@ jobs:
       with:
         draft: false
         files: ${{ steps.package.outputs.archive }}
-        prerelease: ${{ steps.release-type.outputs.value == 'prerelease' }}
+        prerelease: ${{ env.value == 'prerelease' }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
